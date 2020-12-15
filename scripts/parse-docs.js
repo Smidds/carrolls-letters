@@ -2,7 +2,6 @@ const path = require('path')
 const fs = require('fs')
 const glob = require('glob')
 const consola = require('consola')
-const parseDateString = require('date-fns/parse')
 const HTMLParser = require('node-html-parser')
 
 const LETTERS_INPUT_DIR = 'scripts/assets/letters'
@@ -18,11 +17,11 @@ const HEADER_VARIATIONS = {
   NOTE: 'note'
 }
 
-const getDate = (headerStr) => {
+const getDate = (headerStr, isNote) => {
   const dateSearch = /^\d+-\d+-\d+/.exec(headerStr)
 
-  if (dateSearch) return parseDateString(dateSearch[0], 'd-M-yy', new Date())
-  return headerStr.replace(/^no\s*date[\s-–]*/gi, '')
+  if (dateSearch && !isNote) return dateSearch[0]
+  return headerStr.replace(/\n/, ' ').replace(/[-–]$/, '').trim()
 }
 
 const isEmpty = (node, previousNode) => previousNode && previousNode.type === SECTION_TYPES.HEADER ? !node.text.replace(/^[\s-–]*/, '') : !node.text.replace(/^[\s]*/, '')
@@ -33,7 +32,7 @@ const isBlue = node => /color="#0070c0"/i.test(node.toString())
 
 const isImage = node => /<img/i.test(node.toString())
 
-const isCentered = node => /align="CENTER"/i.test(node.toString())
+const isCentered = node => /align=CENTER/i.test(node.toString())
 
 const formatText = (node) => {
   if (node.childNodes.length === 0) return node.text.replace(/\n/g, ' ')
@@ -50,7 +49,45 @@ const formatText = (node) => {
   return formatChildNodes()
 }
 
+const formatLetterSections = ([header, ...sections]) => {
+  let sectionsMarkdown = ''
+  sections.forEach((section) => {
+    if (section.type === SECTION_TYPES.IMAGE) {
+      sectionsMarkdown += `
+<letter-image :sources="[${section.sources}]"${section.caption ? `>
+  ${section.caption.trim()}
+</letter-image>` : ' />\n'}`
+    } else if (section.type === SECTION_TYPES.FOOTNOTE) {
+      sectionsMarkdown += `<footnote>
+
+  ${section.content}
+
+</footnote>`
+    } else {
+      sectionsMarkdown += section.content
+    }
+  })
+
+  return sectionsMarkdown.trim().replace(/^[\s-–]*/, '')
+}
+
 const createLetters = (paragraphs) => {
+  const letters = createLettersInterface(paragraphs)
+  let finalMarkdown = ''
+
+  letters.forEach((letter) => {
+    finalMarkdown += `
+<letter date="${letter.date}" variation="${letter.variation}">
+
+${formatLetterSections(letter.sections)}
+
+</letter>`
+  })
+
+  return finalMarkdown.trim()
+}
+
+const createLettersInterface = (paragraphs) => {
   const letters = []
   let currentLetter
 
@@ -59,9 +96,10 @@ const createLetters = (paragraphs) => {
       letters.push(currentLetter)
     }
 
+    const isNote = isBlue(node)
     currentLetter = {
-      date: getDate(node.text),
-      variation: isBlue(node) ? HEADER_VARIATIONS.NOTE : HEADER_VARIATIONS.STANDARD,
+      date: getDate(node.text, isNote),
+      variation: isNote ? HEADER_VARIATIONS.NOTE : HEADER_VARIATIONS.STANDARD,
       sections: [
         { type: SECTION_TYPES.HEADER }
       ]
@@ -75,7 +113,7 @@ const createLetters = (paragraphs) => {
       if (isImage(paragraph)) {
         currentLetter.sections.push({
           type: SECTION_TYPES.IMAGE,
-          sources: [...paragraph.toString().matchAll(/src="(.*?)"/gi)].map(([, res]) => res)
+          sources: [...paragraph.toString().matchAll(/src="(.*?)"/gi)].map(([, res]) => res).join(', ')
         })
       } else {
         const prevSection = getPreviousSection()
@@ -98,6 +136,8 @@ const createLetters = (paragraphs) => {
           } else if (isBlue(node) && currentLetter.variation !== HEADER_VARIATIONS.NOTE) {
             if (getPreviousSection().type === SECTION_TYPES.HEADER) {
               getPreviousSection().footnote = formatText(node)
+            } else if (getPreviousSection().type === SECTION_TYPES.FOOTNOTE) {
+              getPreviousSection().content += formatText(node)
             } else {
               currentLetter.sections.push({
                 type: SECTION_TYPES.FOOTNOTE,
@@ -147,7 +187,7 @@ const generateYearsLetters = () => {
 
     consola.info(`Writing formatted markdown documents to ./${LETTERS_OUTPUT_DIR}`)
     formattedYears.forEach((doc) => {
-      fs.writeFileSync(path.resolve(`${LETTERS_OUTPUT_DIR}/${doc.year}.md`), `# ${doc.year}\n\n${doc.intro}\n\n${JSON.stringify(doc.letters)}`)
+      fs.writeFileSync(path.resolve(`${LETTERS_OUTPUT_DIR}/${doc.year}.md`), `# ${doc.year}\n\n${doc.intro}\n\n${doc.letters}`)
     })
   } catch (err) {
     consola.error(err)
