@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch app in debugger",
+      "request": "launch",
+      "runtimeArgs": [
+        "run",
+        "dev:debug"
+      ],
+      "runtimeExecutable": "yarn",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "pwa-node",
+    },
+  ],
+}

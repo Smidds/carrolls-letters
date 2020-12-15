@@ -21,7 +21,7 @@ const getDate = (headerStr, isNote) => {
   const dateSearch = /^\d+-\d+-\d+/.exec(headerStr)
 
   if (dateSearch && !isNote) return dateSearch[0]
-  return headerStr.replace(/\n/, ' ').replace(/[-–]$/, '').trim()
+  return headerStr.replace(/\n/, ' ').replace(/[-–]+$/, '').trim()
 }
 
 const isEmpty = (node, previousNode) => previousNode && previousNode.type === SECTION_TYPES.HEADER ? !node.text.replace(/^[\s-–]*/, '') : !node.text.replace(/^[\s]*/, '')
@@ -56,15 +56,9 @@ const formatLetterSections = ([header, ...sections]) => {
   sections.forEach((section) => {
     if (section.type === SECTION_TYPES.IMAGE) {
       sectionsMarkdown += `
-<letter-image :sources="[${section.sources}]"${section.caption ? `>
-  ${section.caption.trim()}
-</letter-image>` : ' />\n'}`
+<letter-image :sources="[${section.sources}]" >${section.caption ? section.caption : ''}</letter-image>`
     } else if (section.type === SECTION_TYPES.FOOTNOTE) {
-      sectionsMarkdown += `<footnote>
-
-  ${section.content}
-
-</footnote>`
+      sectionsMarkdown += `<footnote>${section.content}</footnote>`
     } else {
       sectionsMarkdown += section.content
     }
@@ -189,7 +183,12 @@ const generateYearsLetters = () => {
 
     consola.info(`Writing formatted markdown documents to ./${LETTERS_OUTPUT_DIR}`)
     formattedYears.forEach((doc) => {
-      fs.writeFileSync(path.resolve(`${LETTERS_OUTPUT_DIR}/${doc.year}.md`), `# ${doc.year}\n\n${doc.intro}\n\n${doc.letters}`)
+      fs.writeFileSync(path.resolve(`${LETTERS_OUTPUT_DIR}/${doc.year}.md`), `---
+title: ${doc.year}
+description: "${doc.intro.replace(/"/g, '\\"')}"
+previewImage: ${/:sources="\['(.*?)'/.test(doc.letters) ? /:sources="\['(.*?)'/.exec(doc.letters)[1] : null}
+---
+${doc.letters}`)
     })
   } catch (err) {
     consola.error(err)
