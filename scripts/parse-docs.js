@@ -39,11 +39,13 @@ const formatText = (node) => {
 
   const formatChildNodes = () => node.childNodes.map(child => formatText(child)).join('')
 
-  if (/b/i.test(node.tagName)) {
+  if (/^b/i.test(node.tagName)) {
     return `<b>${formatChildNodes()}</b>`
-  } else if (/u/i.test(node.tagName)) {
+  } else if (/^sup/i.test(node.tagName)) {
+    return `<sup>${formatChildNodes()}</sup>`
+  } else if (/^u/i.test(node.tagName)) {
     return `<u>${formatChildNodes()}</u>`
-  } else if (/wingdings/i.test(node.getAttribute('face'))) {
+  } else if (/wingdings/i.test(node.rawAttrs)) {
     return `<span class="wingdings">${formatChildNodes()}</span>`
   }
   return formatChildNodes()
@@ -113,7 +115,7 @@ const createLettersInterface = (paragraphs) => {
       if (isImage(paragraph)) {
         currentLetter.sections.push({
           type: SECTION_TYPES.IMAGE,
-          sources: [...paragraph.toString().matchAll(/src="(.*?)"/gi)].map(([, res]) => res).join(', ')
+          sources: [...paragraph.toString().matchAll(/src="(.*?)"/gi)].map(([, res]) => `'${res}'`).join(', ')
         })
       } else {
         const prevSection = getPreviousSection()
