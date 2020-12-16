@@ -56,9 +56,10 @@ const formatLetterSections = ([header, ...sections]) => {
   sections.forEach((section) => {
     if (section.type === SECTION_TYPES.IMAGE) {
       sectionsMarkdown += `
-<letter-image :sources="[${section.sources}]" >${section.caption ? section.caption : ''}</letter-image>`
+<v-row><letter-image :sources="[${section.sources}]" >${section.caption ? section.caption : ''}</letter-image></v-row>
+`
     } else if (section.type === SECTION_TYPES.FOOTNOTE) {
-      sectionsMarkdown += `<footnote>${section.content}</footnote>`
+      sectionsMarkdown += `<footnote>${section.content}</footnote> `
     } else {
       sectionsMarkdown += section.content
     }
@@ -73,8 +74,12 @@ const createLetters = (paragraphs) => {
 
   letters.forEach((letter) => {
     finalMarkdown += `
-<letter date="${letter.date}" variation="${letter.variation}">
+<letter date="${letter.date}" variation="${letter.variation}" :has-footnote="${!!letter.footnote}">
+${letter.footnote ? `<template #footnote>
 
+${letter.footnote.trim()}
+
+</template>` : ''}
 ${formatLetterSections(letter.sections)}
 
 </letter>`
@@ -131,7 +136,7 @@ const createLettersInterface = (paragraphs) => {
             startNewLetter(node)
           } else if (isBlue(node) && currentLetter.variation !== HEADER_VARIATIONS.NOTE) {
             if (getPreviousSection().type === SECTION_TYPES.HEADER) {
-              getPreviousSection().footnote = formatText(node)
+              currentLetter.footnote ? currentLetter.footnote += formatText(node) : currentLetter.footnote = formatText(node)
             } else if (getPreviousSection().type === SECTION_TYPES.FOOTNOTE) {
               getPreviousSection().content += formatText(node)
             } else {
@@ -187,6 +192,7 @@ const generateYearsLetters = () => {
 title: ${doc.year}
 description: "${doc.intro.replace(/"/g, '\\"')}"
 previewImage: ${/:sources="\['(.*?)'/.test(doc.letters) ? /:sources="\['(.*?)'/.exec(doc.letters)[1] : null}
+docPath: "/documents/Dad's letters ${doc.year}.docx"
 ---
 ${doc.letters}`)
     })

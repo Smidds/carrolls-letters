@@ -1,8 +1,15 @@
 <template>
   <div>
-    <div class="upper-content">
-      <h1>{{ page.title }}</h1>
-      <p>{{ page.description }}</p>
+    <div class="upper-content mx-auto pb-10 mb-16">
+      <h1 class="page-title">
+        {{ page.title }}
+      </h1>
+      <p class="description" v-html="page.description" />
+      <v-row justify="center">
+        <v-btn color="primary" :href="page.docPath" download>
+          Download Original Doc
+        </v-btn>
+      </v-row>
     </div>
     <nuxt-content :document="page" />
   </div>
@@ -49,6 +56,11 @@ export default {
           hid: 'og:image',
           name: 'og:image',
           content: `${process.env.baseUrl}/images/${this.page.previewImage}`
+        },
+        {
+          hid: 'og:image:alt',
+          name: 'og:image:alt',
+          content: `A randomly selected image from the year ${this.page.title}`
         }
       ]
     }
@@ -56,10 +68,25 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .upper-content {
-  padding-bottom: 2.5rem;
-  margin-bottom: 2.5rem;
   border-bottom: 1px solid black;
+  max-width: 800px;
+
+  .page-title {
+    font-size: 50px;
+    text-align: center;
+    font-family: 'Rochester', cursive;
+  }
+}
+
+.description {
+  font-size: 1em;
+  line-height: 2em;
+  text-indent: 2em;
+}
+
+.wingdings {
+  font-family: 'Wingdings', serif;
 }
 </style>

@@ -5,6 +5,7 @@
       :clipped="clipped"
       fixed
       app
+      color="white"
     >
       <v-list>
         <v-list-item
@@ -44,20 +45,24 @@
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app dark color="primary">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
         <a href="/" class="brand-link">
-          <div class="brand">
+          <div class="brand white--text">
             <app-logo class="small-logo" />
             {{ title }}
           </div>
         </a>
       </v-toolbar-title>
     </v-app-bar>
-    <v-main>
-      <v-container>
-        <nuxt />
+    <v-main class="background">
+      <v-container class="px-3 px-md-5">
+        <v-row>
+          <v-col>
+            <nuxt />
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
   </v-app>
@@ -87,10 +92,10 @@ export default {
   text-decoration: none;
 
   .brand {
-    color: black;
     display: flex;
     flex-direction: row;
     align-items: center;
+    font-family: 'Rochester', cursive;
 
     .small-logo {
       width: 25px;
@@ -98,5 +103,10 @@ export default {
       margin-right: 10px;
     }
   }
+}
+
+.background {
+  background-color: #f6fafe;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%232196f3' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
 }
 </style>
