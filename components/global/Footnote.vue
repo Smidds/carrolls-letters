@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y top class="footnote">
+  <v-menu offset-y eager top class="footnote">
     <template v-slot:activator="{ on: menu, attrs }">
       <v-tooltip bottom>
         <template v-slot:activator="{ on: tooltip }">
