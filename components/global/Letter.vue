@@ -1,10 +1,15 @@
 <template>
-  <div class="letter" :class="classes">
-    <h2><b>{{ displayDate }}</b></h2>
-    <div>
+  <v-card :color="color" class="letter mt-7 mx-auto">
+    <v-card-title class="headline date">
+      {{ displayDate }}
+      <footnote v-if="hasFootnote" class="ml-3">
+        <slot name="footnote" />
+      </footnote>
+    </v-card-title>
+    <v-card-text>
       <slot />
-    </div>
-  </div>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -14,6 +19,7 @@ import formatDate from 'date-fns/format/index'
 export default {
   props: {
     date: { type: String, default: null },
+    hasFootnote: Boolean,
     variation: { type: String, default: 'standard' }
   },
   computed: {
@@ -24,10 +30,11 @@ export default {
       }
       return this.date
     },
-    classes () {
-      return {
-        'lisa-note': this.variation === 'note'
+    color () {
+      if (this.variation === 'note') {
+        return 'accent'
       }
+      return ''
     }
   }
 }
@@ -35,10 +42,10 @@ export default {
 
 <style lang="scss">
 .letter {
-  margin: 2.5rem 0;
+  max-width: 800px;
 
-  &.lisa-note {
-    background-color: lightblue;
+  .date {
+    display: inline-block;
   }
 }
 </style>

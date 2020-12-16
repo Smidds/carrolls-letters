@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-x right>
+  <v-menu offset-y top class="footnote">
     <template v-slot:activator="{ on: menu, attrs }">
       <v-tooltip bottom>
         <template v-slot:activator="{ on: tooltip }">
@@ -7,19 +7,19 @@
             elevation="2"
             icon
             outlined
-            small
+            x-small
             v-bind="attrs"
             v-on="{ ...tooltip, ...menu }"
           >
             <v-icon color="primary">
-              mdi-chat-alert-outline
+              mdi-information-variant
             </v-icon>
           </v-btn>
         </template>
         <span>A note from Lisa</span>
       </v-tooltip>
     </template>
-    <v-card class="footnote">
+    <v-card class="footnote__text pa-3 mb-0">
       <slot />
     </v-card>
   </v-menu>
@@ -29,8 +29,14 @@
 export default {}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .footnote {
-  padding: 0.5rem;
+  &__text {
+    max-width: 300px;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
 }
 </style>

@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div class="upper-content">
-      <h1>{{ page.title }}</h1>
+    <div class="upper-content mx-auto pb-10 mb-16">
+      <h1 class="page-title">
+        {{ page.title }}
+      </h1>
       <p v-html="page.description" />
     </div>
     <nuxt-content :document="page" />
@@ -58,9 +60,13 @@ export default {
 
 <style lang="scss">
 .upper-content {
-  padding-bottom: 2.5rem;
-  margin-bottom: 2.5rem;
   border-bottom: 1px solid black;
+  max-width: 800px;
+
+  .page-title {
+    font-size: 50px;
+    text-align: center;
+  }
 }
 
 .wingdings {

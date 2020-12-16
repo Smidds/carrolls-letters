@@ -5,6 +5,7 @@
       :clipped="clipped"
       fixed
       app
+      color="white"
     >
       <v-list>
         <v-list-item
@@ -44,11 +45,11 @@
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app dark color="primary">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
         <a href="/" class="brand-link">
-          <div class="brand">
+          <div class="brand white--text">
             <app-logo class="small-logo" />
             {{ title }}
           </div>
@@ -56,8 +57,12 @@
       </v-toolbar-title>
     </v-app-bar>
     <v-main>
-      <v-container>
-        <nuxt />
+      <v-container class="px-3 px-md-5">
+        <v-row>
+          <v-col>
+            <nuxt />
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
   </v-app>
