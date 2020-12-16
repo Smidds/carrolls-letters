@@ -42,10 +42,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .letter-image {
-  .images {
-    margin-bottom: 0.5rem;
+  .v-image {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .caption {

@@ -192,6 +192,7 @@ const generateYearsLetters = () => {
 title: ${doc.year}
 description: "${doc.intro.replace(/"/g, '\\"')}"
 previewImage: ${/:sources="\['(.*?)'/.test(doc.letters) ? /:sources="\['(.*?)'/.exec(doc.letters)[1] : null}
+docPath: "/documents/Dad's letters ${doc.year}.docx"
 ---
 ${doc.letters}`)
     })

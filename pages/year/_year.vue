@@ -4,7 +4,12 @@
       <h1 class="page-title">
         {{ page.title }}
       </h1>
-      <p v-html="page.description" />
+      <p class="description" v-html="page.description" />
+      <v-row justify="center">
+        <v-btn color="primary" :href="page.docPath" download>
+          Download Original Doc
+        </v-btn>
+      </v-row>
     </div>
     <nuxt-content :document="page" />
   </div>
@@ -51,6 +56,11 @@ export default {
           hid: 'og:image',
           name: 'og:image',
           content: `${process.env.baseUrl}/images/${this.page.previewImage}`
+        },
+        {
+          hid: 'og:image:alt',
+          name: 'og:image:alt',
+          content: `A randomly selected image from the year ${this.page.title}`
         }
       ]
     }
@@ -66,7 +76,14 @@ export default {
   .page-title {
     font-size: 50px;
     text-align: center;
+    font-family: 'Rochester', cursive;
   }
+}
+
+.description {
+  font-size: 1em;
+  line-height: 2em;
+  text-indent: 2em;
 }
 
 .wingdings {
