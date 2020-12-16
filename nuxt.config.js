@@ -1,6 +1,3 @@
-import path from 'path'
-import glob from 'glob'
-
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
@@ -59,15 +56,6 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     optionsPath: './vuetify.options.js'
-  },
-
-  // Static generation rules
-  generate: {
-    routes: [
-      ...glob.sync('content/letters/*.md').map(file => `/year/${path.basename(file)}`)
-    ],
-    fallback: true,
-    subFolders: false
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

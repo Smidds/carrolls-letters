@@ -2,7 +2,7 @@
   <div>
     <div class="upper-content">
       <h1>{{ page.title }}</h1>
-      <p>{{ page.description }}</p>
+      <p v-html="page.description" />
     </div>
     <nuxt-content :document="page" />
   </div>
@@ -56,10 +56,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .upper-content {
   padding-bottom: 2.5rem;
   margin-bottom: 2.5rem;
   border-bottom: 1px solid black;
+}
+
+.wingdings {
+  font-family: 'Wingdings', serif;
 }
 </style>

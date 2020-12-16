@@ -17,6 +17,9 @@ module.exports = {
   rules: {
     curly: [
       'off'
+    ],
+    'vue/no-v-html': [
+      'off'
     ]
   }
 }

@@ -56,9 +56,10 @@ const formatLetterSections = ([header, ...sections]) => {
   sections.forEach((section) => {
     if (section.type === SECTION_TYPES.IMAGE) {
       sectionsMarkdown += `
-<letter-image :sources="[${section.sources}]" >${section.caption ? section.caption : ''}</letter-image>`
+<letter-image :sources="[${section.sources}]" >${section.caption ? section.caption : ''}</letter-image>
+`
     } else if (section.type === SECTION_TYPES.FOOTNOTE) {
-      sectionsMarkdown += `<footnote>${section.content}</footnote>`
+      sectionsMarkdown += `<footnote>${section.content}</footnote> `
     } else {
       sectionsMarkdown += section.content
     }

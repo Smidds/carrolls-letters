@@ -7,6 +7,7 @@
         contain
         max-height="300"
         max-width="500"
+        eager
         :src="`${baseUrl}/images/${source}`"
         :alt="caption"
       />
@@ -29,7 +30,7 @@ export default {
   },
   data () {
     return {
-      baseUrl: process.env.baseUrl
+      baseUrl: 'https://carrolls-letters.isaachsmith.info'
     }
   }
 }
