@@ -47,7 +47,7 @@
     "glob": "^7.1.6",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.0",
-    "node-html-parser": "^2.0.0",
+    "node-html-parser": "^3.1.6",
     "stylelint": "^13.7.2",
     "stylelint-config-standard": "^20.0.0"
   }
